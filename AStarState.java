@@ -5,11 +5,17 @@
  * основные операции, необходимые алгоритму поиска пути для выполнения его
  * обработки.
  **/
+ 
+ import java.util.*;
+ 
 public class AStarState
 {
     /** Это ссылка на карту, по которой перемещается алгоритм A*. **/
     private Map2D map;
 
+	private HashMap<Location,Waypoint> openVertex = new HashMap<Location, Waypoint>();
+	private HashMap<Location, Waypoint> closeVertex = new HashMap<Location, Waypoint>();
+	
 
     /**
      * Инициализируйте новый объект состояния для использования алгоритма поиска пути A*.
@@ -33,10 +39,21 @@ public class AStarState
      * с минимальными общими затратами.  Если нет открытых путевых точек, этот метод
      * возвращает <code>null</code>.
      **/
-    public Waypoint getMinOpenWaypoint()
-    {
-        // TODO:  Implement.
-        return null;
+    public Waypoint getMinOpenWaypoint() {
+        if (openVertex.isEmpty()) return null;	
+		
+		float minCost = 3.4e+38f;
+		Waypoint minCostObject = null;
+		
+		ArrayList<Waypoint> values = new ArrayList<Waypoint>(openVertex.values());
+		for (Waypoint element : values) {
+			if (element.getTotalCost() < minCost) {
+				minCost = element.getTotalCost();
+				minCostObject = element;
+			}
+		}
+		
+		return minCostObject;
     }
 
     /**
@@ -58,8 +75,7 @@ public class AStarState
     /** Возвращает текущее количество открытых путевых точек. **/
     public int numOpenWaypoints()
     {
-        // TODO:  Implement.
-        return 0;
+        return openVertex.size();
     }
 
 
