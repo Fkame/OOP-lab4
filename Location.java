@@ -12,21 +12,23 @@ public class Location
 
     /** Реализация метода equals() **/
 	//@Override
-    public boolean equals(Location l){
-		if (this.xCoord == l.xCoord && this.yCoord == l.yCoord) 
-			return true;
-		else 
-			return false;
-
+    public boolean equals(Object obj) {
+    if (obj instanceof Location) {
+        // Cast another object to Location type,
+        // then compare.  Return true if equal.
+        Location other = (Location) obj;
+        if (xCoord == other.xCoord && yCoord == other.yCoord) {
+            return true;
+        }
     }
+       // If we got here then they're not equal.  Return false.
+       return false;
+   }
 	
 	//@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + xCoord;
-		result = prime * result + yCoord;
-		return result; 
+		
+		return ((xCoord + 1) * 100 + yCoord); 
 	}
 
     /** Создание новой локации со специальными координатами. **/

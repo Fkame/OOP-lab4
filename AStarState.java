@@ -13,7 +13,7 @@ public class AStarState
     /** Это ссылка на карту, по которой перемещается алгоритм A*. **/
     private Map2D map;
 
-	private HashMap<Location,Waypoint> openVertex = new HashMap<Location, Waypoint>();
+	private HashMap<Location, Waypoint> openVertex = new HashMap<Location, Waypoint>();
 	private HashMap<Location, Waypoint> closeVertex = new HashMap<Location, Waypoint>();
 	
 
@@ -40,6 +40,8 @@ public class AStarState
      * возвращает <code>null</code>.
      **/
     public Waypoint getMinOpenWaypoint() {
+		
+		//System.out.println("getMinOpenWaypoint called!");
         if (openVertex.isEmpty()) return null;	
 		
 		float minCost = 3.4e+38f;
@@ -53,6 +55,7 @@ public class AStarState
 			}
 		}
 		
+		//System.out.println("\tminWaypoint coords: " + minCostObject.getLocation().xCoord + ", " + minCostObject.getLocation().yCoord + ", cost = " + minCost);
 		return minCostObject;
     }
 
@@ -67,11 +70,14 @@ public class AStarState
      **/
     public boolean addOpenWaypoint(Waypoint newWP)
     {
+		//System.out.println("addOpenWaypoint called!");
+		
 		// Получение всех ключей из HashMap
 		ArrayList<Location> locations = new ArrayList<Location>(openVertex.keySet());
 		
 		// Получение Location входящего Waypoint
 		Location newLoc = newWP.getLocation();
+		//System.out.println("\tnew waypoint coords: " + newLoc.xCoord + ", " + newLoc.yCoord);
 		
 		//Просмотр всех ключей из locations
 		for (Location index : locations) {
@@ -80,11 +86,13 @@ public class AStarState
 				
 				// Если стоимость пути до newWP меньше стоимости пути до вершины с такой же Location - заменяем
 				Waypoint oldWP = openVertex.get(index);
+				//System.out.println("\tthere is equal point: " + index.xCoord + ", " + index.yCoord);
+				double oldCost = oldWP.getPreviousCost();
+				double newCost = newWP.getPreviousCost();
+				//System.out.println("\told cost: " + oldCost + ", new cost: " + newCost);
 				
-				float oldCost = oldWP.getPreviousCost();
-				float newCost = newWP.getPreviousCost();
 				if (newCost < oldCost) {
-					openVertex.put(index, newWP);
+					openVertex.put(newLoc, newWP);
 					return true;
 				}
 				
@@ -95,6 +103,7 @@ public class AStarState
 		}
 		
 		openVertex.put(newLoc, newWP);
+		//System.out.println("\tnew point opened");
 		return true;
     }
 
@@ -112,6 +121,7 @@ public class AStarState
      **/
     public void closeWaypoint(Location loc)
     {
+		//System.out.println("Closing waypoint: " + loc.xCoord + ", " + loc.yCoord);
         Waypoint wp = openVertex.get(loc);
 		openVertex.remove(loc);
 		closeVertex.put(loc, wp);
@@ -123,6 +133,6 @@ public class AStarState
      **/
     public boolean isLocationClosed(Location loc)
     {
-       return HashMapClosed.containsKey(loc);
+       return openVertex.containsKey(loc);
     }
 }
