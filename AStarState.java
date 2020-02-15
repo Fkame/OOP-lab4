@@ -67,8 +67,35 @@ public class AStarState
      **/
     public boolean addOpenWaypoint(Waypoint newWP)
     {
-        // TODO:  Implement.
-        return false;
+		// Получение всех ключей из HashMap
+		ArrayList<Location> locations = new ArrayList<Location>(openVertex.keySet());
+		
+		// Получение Location входящего Waypoint
+		Location newLoc = newWP.getLocation();
+		
+		//Просмотр всех ключей из locations
+		for (Location index : locations) {
+			if (newLoc.equals(index)) {
+				// Стадия 2 - сравнение стоимостей, т.к. index == newLoc
+				
+				// Если стоимость пути до newWP меньше стоимости пути до вершины с такой же Location - заменяем
+				Waypoint oldWP = openVertex.get(index);
+				
+				float oldCost = oldWP.getPreviousCost();
+				float newCost = newWP.getPreviousCost();
+				if (newCost < oldCost) {
+					openVertex.put(index, newWP);
+					return true;
+				}
+				
+				// Если новая вершина не подошла
+				return false;
+				
+			}
+		}
+		
+		openVertex.put(newLoc, newWP);
+		return true;
     }
 
 
@@ -85,7 +112,9 @@ public class AStarState
      **/
     public void closeWaypoint(Location loc)
     {
-        // TODO:  Implement.
+        Waypoint wp = openVertex.get(loc);
+		openVertex.remove(loc);
+		closeVertex.put(loc, wp);
     }
 
     /**
@@ -94,7 +123,6 @@ public class AStarState
      **/
     public boolean isLocationClosed(Location loc)
     {
-        // TODO:  Implement.
-        return false;
+       return HashMapClosed.containsKey(loc);
     }
 }
